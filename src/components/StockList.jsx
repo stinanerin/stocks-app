@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { finnHub } from "../services/finnHub";
 
 import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs";
 
+// Not context provider component
+import { WatchListContext } from "./context/WatchListContext";
+
 const StockList = () => {
     const [stock, setStock] = useState([]);
-    const [watchList, setWatchList] = useState(["GOOGL", "MSFT", "AMZN"]);
+    const { watchList } = useContext(WatchListContext);
 
     const changeColor = (num) => (num < 0 ? "danger" : "success");
     const renderIcon = (num) =>
