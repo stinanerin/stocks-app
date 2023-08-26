@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import finnHub from "../services/finnHub";
+import { finnHub } from "../services/finnHub";
 
 import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs";
 

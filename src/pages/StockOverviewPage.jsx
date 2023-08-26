@@ -1,11 +1,11 @@
-import AutoComplete from "../components/AutoComplete";
+import SearchAutoComplete from "../components/SearchAutoComplete";
 import StockList from "../components/StockList";
 
 const StockOverviewPage = () => {
     return (
         <div>
             StockOverviewPage
-            <AutoComplete />
+            <SearchAutoComplete />
             <StockList />
         </div>
     );
