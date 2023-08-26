@@ -1,12 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import { fetchData } from "../services/finnHub";
+
+// Not context provider component
+import { WatchListContext } from "./context/WatchListContext";
 
 const SearchAutoComplete = () => {
     const [searchResult, setSearchResult] = useState([]);
     const [searchInput, setSearchInput] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
+
+    const { addStock } = useContext(WatchListContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -58,10 +63,14 @@ const SearchAutoComplete = () => {
                 }`}
             >
                 {searchResult &&
-                    searchResult.map(({ symbol }) => {
+                    searchResult.map(({ symbol, description }) => {
                         return (
-                            <li className="list-group-item" key={symbol}>
-                                {symbol}
+                            <li
+                                onClick={() => addStock(symbol)}
+                                className="list-group-item"
+                                key={symbol}
+                            >
+                                {symbol}, {description}
                             </li>
                         );
                     })}

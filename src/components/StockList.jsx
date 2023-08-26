@@ -18,6 +18,7 @@ const StockList = () => {
         let isMounted = true;
         const fetchData = async () => {
             try {
+                console.log("watchList", watchList);
                 const stocksReq = watchList.map((stock) => {
                     return finnHub.get("/quote", {
                         params: {
@@ -51,8 +52,8 @@ const StockList = () => {
             isMounted = false;
         };
 
-        // Only fetch data when the component mounts
-    }, []);
+        // Fetch data when watchList changes
+    }, [watchList]);
 
     return (
         <table className="table hover mt-5">
