@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { fetchData } from "../services/finnHub";
 
@@ -9,12 +9,14 @@ const SearchAutoComplete = () => {
     const [searchInput, setSearchInput] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isResultsVisible, setIsResultsVisible] = useState(false);
+    const searchContainerRef = useRef(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("searchInput", searchInput);
         setSearchResult([]);
-        if (searchInput.length === 0) return;
+        if (searchInput.trim() === "") return;
 
         try {
             setIsLoading(true);
@@ -26,15 +28,32 @@ const SearchAutoComplete = () => {
             setSearchResult(res.data.result);
             console.log(searchResult);
             setIsLoading(false);
+            // Show results after fetching
+            setIsResultsVisible(true);
         } catch (error) {
             //todo
             console.log(error);
         }
     };
 
+    const handleDocumentClick = (e) => {
+        const clickedElem = e.target;
+        if (
+            // Check if the click is inside the search container/ search input field or not
+            searchContainerRef.current &&
+            !searchContainerRef.current.contains(clickedElem) &&
+            clickedElem !== document.getElementById("search") // Exclude the search input field
+        ) {
+            setIsResultsVisible(false); // Hide results if clicked outside
+        }
+    };
+
     useEffect(() => {
-        console.log(searchResult);
-    });
+        document.addEventListener("click", handleDocumentClick);
+        return () => {
+            document.removeEventListener("click", handleDocumentClick);
+        };
+    }, []);
 
     return (
         <div className="w-50 p-5 mx-auto">
@@ -47,15 +66,19 @@ const SearchAutoComplete = () => {
                     autoComplete="off"
                     className="form-control"
                     onChange={(e) => setSearchInput(e.target.value)}
+                    onClick={() => setIsResultsVisible(true)}
                 />
                 <label htmlFor="search">Search</label>
             </form>
 
             {isLoading && <p>Loading...</p>}
 
-            {searchResult.length > 0 && (
-                <SearchList searchResult={searchResult} />
-            )}
+            <div ref={searchContainerRef}>
+                {console.log("isResultsVisible3", isResultsVisible)}
+                {isResultsVisible && searchResult.length > 0 && (
+                    <SearchList searchResult={searchResult} />
+                )}
+            </div>
         </div>
     );
 };
