@@ -9,8 +9,8 @@ import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs";
 import { WatchListContext } from "./context/WatchListContext";
 
 const StockList = () => {
-    const [stock, setStock] = useState([]);
-    const { watchList } = useContext(WatchListContext);
+    const [stocks, setStock] = useState([]);
+    const { watchList, deleteStock } = useContext(WatchListContext);
 
     const changeColor = (num) => (num < 0 ? "danger" : "success");
     const renderIcon = (num) =>
@@ -76,7 +76,7 @@ const StockList = () => {
                 </tr>
             </thead>
             <tbody>
-                {stock.map(({ stock, data: { c, d, dp, h, l, o, pc } }) => {
+                {stocks.map(({ stock, data: { c, d, dp, h, l, o, pc } }) => {
                     return (
                         <tr
                             onClick={() => handleSelectStock(stock)}
@@ -95,6 +95,18 @@ const StockList = () => {
                             <td>{l}</td>
                             <td>{o}</td>
                             <td>{pc}</td>
+                            <td>
+                                <button
+                                    onClick={(e) => {
+                                        // Stops parent element(the row) onClick event being triggered
+                                        e.stopPropagation();
+                                        deleteStock(stock);
+                                    }}
+                                    className="btn btn-danger btn-sm ml-3 d-inline-block delete-button"
+                                >
+                                    Delete
+                                </button>
+                            </td>
                         </tr>
                     );
                 })}
