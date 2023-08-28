@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 
 import { fetchData } from "../services/finnHub";
 import { formatChartData } from "../utility/helpers";
-import Chart from "../components/StockChart";
+import StockChart from "../components/StockChart";
+import StockProfile from "../components/StockProfile";
 
 const StockDetailPage = () => {
     const [chartData, setCharData] = useState();
@@ -73,7 +74,12 @@ const StockDetailPage = () => {
         // If selected stock changes --> update data
     }, [symbol]);
 
-    return <div>{chartData && <Chart data={chartData} symbol={symbol} />}</div>;
+    return (
+        <div>
+            {chartData && <StockChart data={chartData} symbol={symbol} />}
+            <StockProfile symbol={symbol} />
+        </div>
+    );
 };
 
 export default StockDetailPage;
