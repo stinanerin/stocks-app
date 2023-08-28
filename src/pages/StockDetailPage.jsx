@@ -3,38 +3,41 @@ import { useParams } from "react-router-dom";
 
 import { fetchData } from "../services/finnHub";
 import { formatChartData } from "../utility/helpers";
+import Chart from "../components/StockChart";
 
 const StockDetailPage = () => {
-    const [chartdata, setCharData] = useState();
+    const [chartData, setCharData] = useState();
     const { symbol } = useParams();
 
     console.log(symbol);
 
     useEffect(() => {
         const today = new Date();
+        // Convert to seconds
         const currentTimeStamp = Math.floor(today.getTime() / 1000);
 
+        // 24 hours in seconds
         const TWENTY_FOUR_HOURS = 24 * 60 * 60;
 
         // --------- Time Intervals ---------
         // Day
         let oneDay;
         if (today.getDay() === 6) {
-            // Saturday
-            oneDay = currentTimeStamp - TWENTY_FOUR_HOURS * 2;
+            oneDay = currentTimeStamp - 2 * TWENTY_FOUR_HOURS;
         } else if (today.getDay() === 0) {
-            // Sunday
-            oneDay = currentTimeStamp - TWENTY_FOUR_HOURS * 3;
+            oneDay = currentTimeStamp - 3 * TWENTY_FOUR_HOURS;
         } else {
+            console.log("hej från else");
             oneDay = currentTimeStamp - TWENTY_FOUR_HOURS;
         }
 
         // Week
-        const oneWeek = currentTimeStamp * TWENTY_FOUR_HOURS * 7;
-        console.log(oneWeek);
-
+        const oneWeek = currentTimeStamp - 7 * TWENTY_FOUR_HOURS;
         // Year
-        const oneYear = currentTimeStamp * TWENTY_FOUR_HOURS * 365;
+        const oneYear = currentTimeStamp - 365 * TWENTY_FOUR_HOURS;
+
+        console.log("start oneday", new Date(oneDay * 1000));
+        console.log("end", new Date(currentTimeStamp * 1000));
 
         const fetchDetailStock = async () => {
             try {
@@ -58,12 +61,11 @@ const StockDetailPage = () => {
                         resolution: "W",
                     }),
                 ]);
+                console.log("responses", responses);
 
                 setCharData({
                     day: formatChartData(responses[0].data),
-                    //todo- somthign weird seems to happen on mondays --> no data
-
-                    // week: formatChartData(responses[1].data),
+                    week: formatChartData(responses[1].data),
                     year: formatChartData(responses[2].data),
                 });
             } catch (error) {
@@ -74,7 +76,7 @@ const StockDetailPage = () => {
         // If selected stock changes --> update data
     }, [symbol]);
 
-    return <div>Stock {symbol}</div>;
+    return <div>{chartData && <Chart data={chartData} symbol={symbol} />}</div>;
 };
 
 export default StockDetailPage;
