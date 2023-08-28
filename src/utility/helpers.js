@@ -8,3 +8,7 @@ export const formatChartData = (data) => {
         };
     });
 };
+
+export const determineActiveBtn = (dateValue, value) => {
+    return value === dateValue ? "btn-primary" : "btn-outline-primary";
+};

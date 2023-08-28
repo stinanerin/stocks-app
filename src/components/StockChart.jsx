@@ -1,14 +1,18 @@
 import Chart from "react-apexcharts";
 
+import { useState } from "react";
+import { determineActiveBtn } from "../utility/helpers";
+
 const StockChart = ({ data, symbol }) => {
+    const [dateFormat, setDateFormat] = useState("24h");
     /* 
         data: [
-            x: time,
-            y: stockprice,
+            x: [time(ms)],
+            y: [stockprice],
         ]
     */
 
-    const { day, year } = data;
+    const { day, week, year } = data;
     console.log(day);
     const options = {
         title: {
@@ -40,14 +44,46 @@ const StockChart = ({ data, symbol }) => {
     const series = [
         {
             name: symbol,
-            data: day,
+            data:
+                dateFormat === "week"
+                    ? week
+                    : dateFormat === "year"
+                    ? year
+                    : day,
         },
     ];
 
     return (
-        <div className="mt-5 p-4 shadow-sm bg-white">
-            <Chart options={options} series={series} type="area" width="100%" />
-        </div>
+        <>
+            <div className="mt-5 p-4 shadow-sm bg-white">
+                <Chart
+                    options={options}
+                    series={series}
+                    type="area"
+                    width="100%"
+                />
+            </div>
+            <div>
+                <button
+                    className={`btn ${determineActiveBtn(dateFormat, "24h")}`}
+                    onClick={() => setDateFormat("24h")}
+                >
+                    24h
+                </button>
+                <button
+                    className={`btn ${determineActiveBtn(dateFormat, "week")}`}
+                    onClick={() => setDateFormat("week")}
+                >
+                    Week
+                </button>
+                <button
+                    className={`btn ${determineActiveBtn(dateFormat, "year")}`}
+                    onClick={() => setDateFormat("year")}
+                >
+                    year
+                </button>
+            </div>
+        </>
     );
 };
 
