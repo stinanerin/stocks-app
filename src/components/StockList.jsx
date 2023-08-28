@@ -22,7 +22,6 @@ const StockList = () => {
         let isMounted = true;
         const fetchData = async () => {
             try {
-                console.log("watchList", watchList);
                 const stocksReq = watchList.map((stock) => {
                     return finnHub.get("/quote", {
                         params: {
@@ -40,7 +39,6 @@ const StockList = () => {
                     };
                 });
 
-                console.log("stockData", stockData);
                 if (isMounted) {
                     setStock(stockData);
                 }
@@ -60,7 +58,7 @@ const StockList = () => {
     }, [watchList]);
 
     const handleSelectStock = (stock) => {
-        history.push(`detail/${stock}`); // Use history.push
+        history.push(`detail/${stock}`);
     };
 
     return (

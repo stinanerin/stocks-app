@@ -9,8 +9,6 @@ const StockDetailPage = () => {
     const [chartData, setCharData] = useState();
     const { symbol } = useParams();
 
-    console.log(symbol);
-
     useEffect(() => {
         const today = new Date();
         // Convert to seconds
@@ -27,7 +25,6 @@ const StockDetailPage = () => {
         } else if (today.getDay() === 0) {
             oneDay = currentTimeStamp - 3 * TWENTY_FOUR_HOURS;
         } else {
-            console.log("hej från else");
             oneDay = currentTimeStamp - TWENTY_FOUR_HOURS;
         }
 
@@ -36,8 +33,8 @@ const StockDetailPage = () => {
         // Year
         const oneYear = currentTimeStamp - 365 * TWENTY_FOUR_HOURS;
 
-        console.log("start oneday", new Date(oneDay * 1000));
-        console.log("end", new Date(currentTimeStamp * 1000));
+        // console.log("start oneday", new Date(oneDay * 1000));
+        // console.log("end", new Date(currentTimeStamp * 1000));
 
         const fetchDetailStock = async () => {
             try {
