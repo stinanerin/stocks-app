@@ -9,8 +9,8 @@ import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs";
 import { WatchListContext } from "./context/WatchListContext";
 
 const StockList = () => {
-    const [stock, setStock] = useState([]);
-    const { watchList } = useContext(WatchListContext);
+    const [stocks, setStock] = useState([]);
+    const { watchList, deleteStock } = useContext(WatchListContext);
 
     const changeColor = (num) => (num < 0 ? "danger" : "success");
     const renderIcon = (num) =>
@@ -22,7 +22,6 @@ const StockList = () => {
         let isMounted = true;
         const fetchData = async () => {
             try {
-                console.log("watchList", watchList);
                 const stocksReq = watchList.map((stock) => {
                     return finnHub.get("/quote", {
                         params: {
@@ -40,7 +39,6 @@ const StockList = () => {
                     };
                 });
 
-                console.log("stockData", stockData);
                 if (isMounted) {
                     setStock(stockData);
                 }
@@ -60,7 +58,7 @@ const StockList = () => {
     }, [watchList]);
 
     const handleSelectStock = (stock) => {
-        history.push(`detail/${stock}`); // Use history.push
+        history.push(`detail/${stock}`);
     };
 
     return (
@@ -78,7 +76,7 @@ const StockList = () => {
                 </tr>
             </thead>
             <tbody>
-                {stock.map(({ stock, data: { c, d, dp, h, l, o, pc } }) => {
+                {stocks.map(({ stock, data: { c, d, dp, h, l, o, pc } }) => {
                     return (
                         <tr
                             onClick={() => handleSelectStock(stock)}
@@ -97,6 +95,18 @@ const StockList = () => {
                             <td>{l}</td>
                             <td>{o}</td>
                             <td>{pc}</td>
+                            <td>
+                                <button
+                                    onClick={(e) => {
+                                        // Stops parent element(the row) onClick event being triggered
+                                        e.stopPropagation();
+                                        deleteStock(stock);
+                                    }}
+                                    className="btn btn-danger btn-sm ml-3 d-inline-block delete-button"
+                                >
+                                    Delete
+                                </button>
+                            </td>
                         </tr>
                     );
                 })}

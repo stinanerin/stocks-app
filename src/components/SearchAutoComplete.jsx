@@ -14,7 +14,7 @@ const SearchAutoComplete = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("searchInput", searchInput);
+
         setSearchResult([]);
         if (searchInput.trim() === "") return;
 
@@ -26,7 +26,6 @@ const SearchAutoComplete = () => {
             const res = await fetchData("/search", params);
 
             setSearchResult(res.data.result);
-            console.log(searchResult);
             setIsLoading(false);
             // Show results after fetching
             setIsResultsVisible(true);
@@ -74,7 +73,6 @@ const SearchAutoComplete = () => {
             {isLoading && <p>Loading...</p>}
 
             <div ref={searchContainerRef}>
-                {console.log("isResultsVisible3", isResultsVisible)}
                 {isResultsVisible && searchResult.length > 0 && (
                     <SearchList searchResult={searchResult} />
                 )}
