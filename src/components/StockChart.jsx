@@ -14,7 +14,24 @@ const StockChart = ({ data, symbol }) => {
 
     const { day, week, year } = data;
     console.log(day);
+
+    const determineTimeFormat = () => {
+        return dateFormat === "week"
+            ? week
+            : dateFormat === "year"
+            ? year
+            : day;
+    };
+
+    const color =
+        determineTimeFormat()[determineTimeFormat().length - 1].y -
+            determineTimeFormat()[0].y >
+        0
+            ? "#26C281"
+            : "#ed3419";
+
     const options = {
+        colors: [color],
         title: {
             text: symbol,
             align: "center",
@@ -44,12 +61,7 @@ const StockChart = ({ data, symbol }) => {
     const series = [
         {
             name: symbol,
-            data:
-                dateFormat === "week"
-                    ? week
-                    : dateFormat === "year"
-                    ? year
-                    : day,
+            data: determineTimeFormat(),
         },
     ];
 
