@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { finnHub } from "../services/finnHub";
 
+import { useHistory } from "react-router-dom";
+
 import { BsFillCaretDownFill, BsFillCaretUpFill } from "react-icons/bs";
 
 // Not context provider component
@@ -13,6 +15,8 @@ const StockList = () => {
     const changeColor = (num) => (num < 0 ? "danger" : "success");
     const renderIcon = (num) =>
         num < 0 ? <BsFillCaretDownFill /> : <BsFillCaretUpFill />;
+
+    const history = useHistory();
 
     useEffect(() => {
         let isMounted = true;
@@ -55,6 +59,10 @@ const StockList = () => {
         // Fetch data when watchList changes
     }, [watchList]);
 
+    const handleSelectStock = (stock) => {
+        history.push(`detail/${stock}`); // Use history.push
+    };
+
     return (
         <table className="table hover mt-5">
             <thead style={{ color: "rgb(79,89,102)" }}>
@@ -72,7 +80,11 @@ const StockList = () => {
             <tbody>
                 {stock.map(({ stock, data: { c, d, dp, h, l, o, pc } }) => {
                     return (
-                        <tr className="table-row" key={stock}>
+                        <tr
+                            onClick={() => handleSelectStock(stock)}
+                            className="table-row"
+                            key={stock}
+                        >
                             <th>{stock}</th>
                             <td>{c}</td>
                             <td className={`text-${changeColor(d)}`}>
